@@ -14,6 +14,7 @@ import { IoClose } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import clsx from "clsx";
 import { setOpenSidebar } from "./redux/slices/authSlice";
+import TaskDetails from './pages/TaskDetails'
 
 
 
@@ -105,7 +106,7 @@ function App() {
             <Route path='/todo/:status' element={<Tasks/>}/>
             <Route path='/team' element={<Users/>}/>
             <Route path='/trash' element={<Trash/>}/>
-           <Route path='/task/:id' element={<Task/>}/> 
+           <Route path='/task/:id' element={<TaskDetails/>}/> 
           </Route>
           <Route path='/login' element={<Login/>}/>
         </Routes>

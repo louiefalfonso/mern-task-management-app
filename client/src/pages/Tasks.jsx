@@ -2,15 +2,14 @@ import React, { useState } from "react";
 import { FaList } from "react-icons/fa";
 import { MdGridView } from "react-icons/md";
 import { useParams } from "react-router-dom";
-import { tasks } from "../assets/data";
-import { IoMdAdd } from "react-icons/io";
-
 import Loading from "../components/Loader";
 import Title from "../components/Title";
 import Button from "../components/Button";
+import { IoMdAdd } from "react-icons/io";
 import Tabs from "../components/Tabs";
 import TaskTitle from "../components/TaskTitle";
 import BoardView from "../components/BoardView";
+import { tasks } from "../assets/data";
 import Table from "../components/task/Table";
 import AddTask from "../components/task/AddTask";
 
@@ -20,11 +19,12 @@ const TABS = [
 ];
 
 const TASK_TYPE = {
-  todo: "bg-blue-600","in progress": "bg-yellow-600",
+  todo: "bg-blue-600",
+  "in progress": "bg-yellow-600",
   completed: "bg-green-600",
 };
 
-const Task = () => {
+const Tasks = () => {
   const params = useParams();
 
   const [selected, setSelected] = useState(0);
@@ -32,7 +32,6 @@ const Task = () => {
   const [loading, setLoading] = useState(false);
 
   const status = params?.status || "";
-
 
   return loading ? (
     <div className="py-10">
@@ -77,6 +76,6 @@ const Task = () => {
       <AddTask open={open} setOpen={setOpen} />
     </div>
   );
-}
+};
 
-export default Task
+export default Tasks;
