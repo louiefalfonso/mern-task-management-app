@@ -1,5 +1,5 @@
 import React from 'react'
-import {Bar,BarChart,CartesianGrid,Legend,ResponsiveContainer,Tooltip,} from "recharts";
+//import {Bar,BarChart,CartesianGrid,Legend,ResponsiveContainer,Tooltip,} from "recharts";
 import { chartData } from "../assets/data";
 
 const Chart = () => {

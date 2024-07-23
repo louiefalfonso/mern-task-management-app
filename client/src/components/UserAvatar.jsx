@@ -6,6 +6,9 @@ import { IoLogOutOutline } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getInitials } from "../utils";
+import { toast } from "sonner";
+import { useLogoutMutation } from "../redux/slices/api/authApiSlice";
+import { logout } from "../redux/slices/authSlice";
 
 const UserAvatar = () => {
   const [open, setOpen] = useState(false);
@@ -14,8 +17,17 @@ const UserAvatar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const logoutHandler = () => {
-    console.log("logout");
+  const [logoutUser] = useLogoutMutation()
+  const logoutHandler = async () => {
+    try {
+      await logoutUser().unwrap();
+      localStorage.removeItem("userInfo"); 
+      dispatch(logout());
+      navigate("/login");
+    } catch (err) {
+      console.error("Error during logout:", err);
+      toast.error(err?.data?.message || err.error);
+    }
   };
 
   return (
@@ -66,7 +78,7 @@ const UserAvatar = () => {
                 </MenuItem>
 
                 <MenuItem>
-                  {({ }) => (
+                  
                     <button
                       onClick={logoutHandler}
                       className={`text-red-600 group flex w-full items-center rounded-md px-2 py-2 text-base`}
@@ -74,7 +86,7 @@ const UserAvatar = () => {
                       <IoLogOutOutline className="mr-2" aria-hidden="true" />
                       Logout
                     </button>
-                  )}
+                  
                 </MenuItem>
               </div>
             </MenuItems>
