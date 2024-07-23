@@ -4,15 +4,17 @@ const routeNotFound = (req, res, next) => {
   next(error);
 };
 
-const errorHandler = (err, res) => {
-  const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
-  const message =
-    err.name === "CastError" && err.kind === "ObjectId"
-      ? "Resource not found"
-      : err.message;
+const errorHandler = (err, req, res, next) => {
+  let statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  let message = err.message;
+
+  if (err.name === "CastError" && err.kind === "ObjectId") {
+    statusCode = 404;
+    message = "Resource not found";
+  }
 
   res.status(statusCode).json({
-    message,
+    message: message,
     stack: process.env.NODE_ENV === "production" ? null : err.stack,
   });
 };
