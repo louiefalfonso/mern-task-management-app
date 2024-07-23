@@ -15,8 +15,8 @@ const Users = () => {
   const [openAction, setOpenAction] = useState(false);
   const [selected, setSelected] = useState(null);
 
-  const {data, isLoading, error} = useGetTeamListsQuery();
-  
+  const { data, isLoading, error } = useGetTeamListsQuery();
+
   const userActionHandler = () => {};
   const deleteHandler = () => {};
 
