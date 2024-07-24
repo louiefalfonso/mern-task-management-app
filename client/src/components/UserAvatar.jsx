@@ -1,4 +1,4 @@
-import { Menu, Transition,  } from "@headlessui/react";
+import { Menu, Transition } from "@headlessui/react";
 import { MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import { FaUser, FaUserLock } from "react-icons/fa";
@@ -9,10 +9,11 @@ import { getInitials } from "../utils";
 import { toast } from "sonner";
 import { useLogoutMutation } from "../redux/slices/api/authApiSlice";
 import { logout } from "../redux/slices/authSlice";
+import AddUser from "./AddUser";
+
 
 const UserAvatar = () => {
   const [open, setOpen] = useState(false);
-  const [openPassword, setOpenPassword] = useState(false);
   const { user } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -54,7 +55,7 @@ const UserAvatar = () => {
             <MenuItems className="absolute right-0 mt-2 w-56 origin-top-right divide-gray-100 rounded-md bg-white shadow-2xl ring-1 ring-black/5 focus:outline-none">
               <div className="p-4">
                 <MenuItem>
-                  {({ }) => (
+                  {({}) => (
                     <button
                       onClick={() => setOpen(true)}
                       className="text-gray-700 group flex w-full items-center rounded-md px-2 py-2 text-base"
@@ -65,34 +66,22 @@ const UserAvatar = () => {
                   )}
                 </MenuItem>
 
+                
                 <MenuItem>
-                  {({ }) => (
-                    <button
-                      onClick={() => setOpenPassword(true)}
-                      className={`tetx-gray-700 group flex w-full items-center rounded-md px-2 py-2 text-base`}
-                    >
-                      <FaUserLock className="mr-2" aria-hidden="true" />
-                      Change Password
-                    </button>
-                  )}
-                </MenuItem>
-
-                <MenuItem>
-                  
-                    <button
-                      onClick={logoutHandler}
-                      className={`text-red-600 group flex w-full items-center rounded-md px-2 py-2 text-base`}
-                    >
-                      <IoLogOutOutline className="mr-2" aria-hidden="true" />
-                      Logout
-                    </button>
-                  
+                  <button
+                    onClick={logoutHandler}
+                    className={`text-red-600 group flex w-full items-center rounded-md px-2 py-2 text-base`}
+                  >
+                    <IoLogOutOutline className="mr-2" aria-hidden="true" />
+                    Logout
+                  </button>
                 </MenuItem>
               </div>
             </MenuItems>
           </Transition>
         </Menu>
       </div>
+      <AddUser open={open} setOpen={setOpen} userData={user} />
     </>
   );
 };

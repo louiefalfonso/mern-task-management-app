@@ -1,6 +1,7 @@
 import { apiSlice } from "../apiSlice";
 const USER_URL = "/user";
 
+
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     updateUser: builder.mutation({
@@ -42,8 +43,24 @@ export const userApiSlice = apiSlice.injectEndpoints({
         credentials: "include",
       }),
     }),
+    markNotiAsRead: builder.mutation({
+      query: (data) => ({
+        url: `${USERS_URL}/read-noti?isReadType=${data.type}&id=${data.id}`,
+        method: "PUT",
+        body: data,
+        credentials: "include",
+      }),
+    }),
+    
   }),
 });
 
-export const { useUpdateUserMutation, useGetTeamListsQuery, useDeleteUserMutation, useUserActionMutation, useGetNofiticationQuery} = userApiSlice;
+export const { 
+  useUpdateUserMutation, 
+  useGetTeamListsQuery, 
+  useDeleteUserMutation, 
+  useUserActionMutation, 
+  useGetNofiticationQuery,
+  useMarkNotiAsReadMutation,
+} = userApiSlice;
 

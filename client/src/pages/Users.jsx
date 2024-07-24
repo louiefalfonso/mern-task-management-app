@@ -19,6 +19,13 @@ const Users = () => {
   const [deteleUser] = useDeleteUserMutation();
   const [userAction] = useUserActionMutation();
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const usersPerPage = 10;
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = data?.slice(indexOfFirstUser, indexOfLastUser);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
 
 
   const userActionHandler = async() => {
@@ -103,7 +110,7 @@ const Users = () => {
           onClick={() => userStatusClick(user)}
           className={clsx(
             "w-fit px-4 py-1 rounded-full",
-            user?.isActive ? "bg-blue-200" : "bg-yellow-100"
+            user?.isActive ? "bg-green-300" : "bg-yellow-100"
           )}
         >
           {user?.isActive ? "Active" : "Disabled"}
@@ -152,6 +159,24 @@ const Users = () => {
                   ))}
               </tbody>
             </table>
+            <div className="flex justify-center mt-4">
+              {data &&
+                Array.from(
+                  { length: Math.ceil(data.length / usersPerPage) },
+                  (_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => paginate(i + 1)}
+                      className={clsx(
+                        "px-3 py-1 mx-1 rounded-full text-sm",
+                        currentPage === i + 1 ? "bg-blue-200" : "bg-gray-200"
+                      )}
+                    >
+                      {i + 1}
+                    </button>
+                  )
+                )}
+            </div>
           </div>
         </div>
       </div>

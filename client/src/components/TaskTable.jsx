@@ -18,8 +18,7 @@ const TaskTable = ({ tasks }) => {
       <tr className="text-black text-left">
         <th className="py-2">Task Title</th>
         <th className="py-2">Priority</th>
-        <th className="py-2">Team</th>
-        <th className="py-2 hidden md:block">Created At</th>
+        <th className="py-2">Team Members</th>
       </tr>
     </thead>
   );
@@ -59,11 +58,6 @@ const TaskTable = ({ tasks }) => {
             </div>
           ))}
         </div>
-      </td>
-      <td className="py-2 hidden md:block">
-        <span className="text-base text-gray-600">
-          {moment(task?.date).fromNow()}
-        </span>
       </td>
     </tr>
   );

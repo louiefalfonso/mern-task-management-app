@@ -9,6 +9,8 @@ import Button from "./Button";
 import { useRegisterMutation } from "../redux/slices/api/authApiSlice";
 import { toast } from "sonner";
 import { useUpdateUserMutation } from "../redux/slices/api/userApiSlice";
+//import { toast } from "react-toastify";
+
 
 const AddUser = ({ open, setOpen, userData }) => {
   let defaultValues = userData ?? {};
@@ -22,23 +24,30 @@ const AddUser = ({ open, setOpen, userData }) => {
 
   const dispatch = useDispatch();
   const [addNewUser, {isLoading}] = useRegisterMutation();
-  const [updateUser, {isLoading:isUpdating}] = useUpdateUserMutation();
+ 
+  const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
 
   const handleOnSubmit = async (data) => {
     try {
-      if (userData){
-        const result = await updateUser({...data, password: data.email}).unwrap();
-        toast.success("User updated successfully")
-        if(userData?._id === user>_id){
-          dispatch(setCredentials(...result.user))
+      if (userData) {
+        const result = await updateUser({
+          ...data,
+          password: data.email,
+        }).unwrap();
+        toast.success("User updated successfully");
+        if (userData?._id === user._id) {
+          dispatch(setCredentials(...result.user));
         }
-      }else{
-        const result = await addNewUser({...data, password: data.email}).unwrap();
-        toast.success("New User created successfully")
+      } else {
+        const result = await addNewUser({
+          ...data,
+          password: data.email,
+        }).unwrap();
+         toast.success("User updated successfully");
       }
-      setTimeout(() =>{
-        setOpen(false)
-      },1500)
+      setTimeout(() => {
+        setOpen(false);
+      }, 1500);
     } catch (err) {
       toast.error(err?.data?.message || err.error);
     }
@@ -48,10 +57,7 @@ const AddUser = ({ open, setOpen, userData }) => {
     <>
       <ModalWrapper open={open} setOpen={setOpen}>
         <form onSubmit={handleSubmit(handleOnSubmit)} className="">
-          <DialogTitle
-            as="h2"
-            className="text-base font-bold leading-6 text-gray-900 mb-4"
-          >
+          <DialogTitle as="h2" className="text-base font-bold leading-6 text-gray-900 mb-4">
             {userData ? "UPDATE PROFILE" : "ADD NEW USER"}
           </DialogTitle>
           <div className="mt-2 flex flex-col gap-6">
