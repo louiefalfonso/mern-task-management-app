@@ -134,11 +134,11 @@ export const updateUserProfile = async (req, res) => {
         : userId;
 
     const user = await User.findById(id);
-
-    if (user) {
+    
       user.name = req.body.name || user.name;
       user.title = req.body.title || user.title;
       user.role = req.body.role || user.role;
+      user.email = req.body.email || user.email;
 
       const updatedUser = await user.save();
 
@@ -149,9 +149,9 @@ export const updateUserProfile = async (req, res) => {
         message: "Profile Updated Successfully.",
         user: updatedUser,
       });
-    } else {
+     /*else {
       res.status(404).json({ status: false, message: "User not found" });
-    }
+    }*/
   } catch (error) {
     console.log(error);
     return res.status(400).json({ status: false, message: error.message });

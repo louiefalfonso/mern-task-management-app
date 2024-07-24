@@ -2,15 +2,17 @@ import React from "react";
 import moment from "moment";
 import clsx from "clsx";
 import { getInitials } from "../utils";
+import { useGetTeamListsQuery } from "../redux/slices/api/userApiSlice";
 
 const UserTable = ({ users }) => {
+  const { data, refetch } = useGetTeamListsQuery();
   const TableHeader = () => (
     <thead className="border-b border-gray-300 ">
       <tr className="text-black  text-left">
         <th className="py-2">Full Name</th>
         <th className="py-2">Role</th>
+        <th className="py-2">Email</th>
         <th className="py-2">Status</th>
-        <th className="py-2">Created At</th>
       </tr>
     </thead>
   );
@@ -18,7 +20,7 @@ const UserTable = ({ users }) => {
     <tr className="border-b border-gray-200  text-gray-600 hover:bg-gray-400/10">
       <td className="py-2">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full text-white flex items-center justify-center text-sm bg-violet-700">
+          <div className="w-9 h-9 rounded-full text-white flex items-center justify-center text-sm bg-blue-600">
             <span className="text-center">{getInitials(user?.name)}</span>
           </div>
           <div>
@@ -30,6 +32,9 @@ const UserTable = ({ users }) => {
       <td className="py-2">
         <p>{user?.role}</p>
       </td>
+      <td className="py-2">
+        <p>{user?.email}</p>
+      </td>
       <td>
         <p
           className={clsx(
@@ -40,7 +45,6 @@ const UserTable = ({ users }) => {
           {user?.isActive ? "Active" : "Disabled"}
         </p>
       </td>
-      <td className="py-2 text-sm">{moment(user?.createdAt).fromNow()}</td>
     </tr>
   );
 
@@ -49,9 +53,8 @@ const UserTable = ({ users }) => {
       <table className="w-full">
         <TableHeader />
         <tbody>
-          {users?.map((user, index) => (
-            <TableRow key={index + user?._id} user={user} />
-          ))}
+          {data &&
+            data.map((user, index) => <TableRow key={index} user={user} />)}
         </tbody>
       </table>
     </div>

@@ -1,22 +1,20 @@
 import { Route, Routes, Navigate, Outlet, useLocation } from 'react-router-dom'
-import Login from './pages/Login'
-import Dashboard from './pages/Dashboard'
-import Tasks from './pages/Task'
-import Users from './pages/Users'
-import Trash from './pages/Trash'
-import Task from './pages/Task'
 import { Toaster } from 'sonner'
-import Sidebar from './components/Sidebar';
-import Navbar from './components/Navbar';
+import clsx from "clsx";
+import { setOpenSidebar } from "./redux/slices/authSlice";
 import { Transition } from "@headlessui/react";
 import { Fragment, useRef } from "react";
 import { IoClose } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
-import clsx from "clsx";
-import { setOpenSidebar } from "./redux/slices/authSlice";
-import TaskDetails from './pages/TaskDetails'
-
-
+import Sidebar from "./components/Sidebar";
+import Navbar from "./components/Navbar";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import Tasks from "./pages/Task";
+import Users from "./pages/Users";
+import Trash from "./pages/Trash";
+import Task from "./pages/Task";
+import TaskDetails from "./pages/TaskDetails";
 
 
 function Layout() {
