@@ -13,7 +13,7 @@ import Button from "../components/Button";
 import { PRIOTITYSTYELS, TASK_TYPE } from "../utils";
 import AddUser from "../components/AddUser";
 import ConfirmatioDialog from "../components/ConfirmatioDialog";
-import { useGetAllTaskQuery } from "../redux/slices/api/taskApiSlice";
+//import { useGetAllTaskQuery } from "../redux/slices/api/taskApiSlice";
 
 const ICONS = {
   high: <MdKeyboardDoubleArrowUp />,
@@ -27,6 +27,15 @@ const Trash = () => {
   const [msg, setMsg] = useState(null);
   const [type, setType] = useState("delete");
   const [selected, setSelected] = useState("");
+
+  /*  
+  const { data, isLoading } = useGetAllTaskQuery({
+      isTrashed: true,
+      search: "",
+    });*/
+
+
+
 
   
   const deleteAllClick = () => {

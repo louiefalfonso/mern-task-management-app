@@ -12,9 +12,8 @@ import { BiMessageAltDetail } from "react-icons/bi";
 import { FaList } from "react-icons/fa";
 import UserInfo from "./UserInfo";
 import { IoMdAdd } from "react-icons/io";
-
-
 import TaskDialog from "./task/TaskDialog";
+import AddSubTask from "./task/AddSubTask";
 
 const ICONS = {
   high: <MdKeyboardDoubleArrowUp />,
@@ -66,7 +65,6 @@ const TaskCard = ({ task }) => {
               <MdAttachFile />
               <span>{task?.assets?.length}</span>
             </div>
-      
           </div>
 
           <div className="flex flex-row-reverse">
@@ -85,7 +83,7 @@ const TaskCard = ({ task }) => {
         </div>
       </div>
 
-     
+      <AddSubTask open={open} setOpen={setOpen} id={task._id} />
     </>
   );
 };

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 import { getInitials } from "../utils";
-import { useGetTeamListsQuery } from "../redux/slices/api/userApiSlice";
+import { useGetAllUsersQuery } from "../redux/slices/api/userApiSlice";
+//import { useGetTeamListsQuery } from "../redux/slices/api/userApiSlice";
 
 const UserTable = ({ users }) => {
-  const { data, refetch } = useGetTeamListsQuery();
+  const { data, refetch } = useGetAllUsersQuery();
 
   //paginate
  const [currentPage, setCurrentPage] = useState(1);

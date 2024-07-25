@@ -34,13 +34,6 @@ const taskSchema = new Schema(
       },
     ],
 
-    subTasks: [
-      {
-        title: String,
-        date: Date,
-        tag: String,
-      },
-    ],
     assets: [String],
     team: [{ type: Schema.Types.ObjectId, ref: "User" }],
     isTrashed: { type: Boolean, default: false },

@@ -13,10 +13,16 @@ const linkData = [
     icon: <MdDashboard />,
   },
   {
+    label: "Teams",
+    link: "users",
+    icon: <FaUsers />,
+  },
+  {
     label: "Tasks",
     link: "tasks",
     icon: <FaTasks />,
   },
+  
   {
     label: "Completed",
     link: "completed/completed",
@@ -32,21 +38,10 @@ const linkData = [
     link: "todo/todo",
     icon: <MdOutlinePendingActions />,
   },
-  {
-    label: "Team",
-    link: "team",
-    icon: <FaUsers />,
-  },
-  {
-    label: "Trash",
-    link: "trash",
-    icon: <FaTrashAlt />,
-  },
 ];
 
 const Sidebar = () => {
   const { user } = useSelector((state) => state.auth);
-
   const dispatch = useDispatch();
   const location = useLocation();
 
@@ -85,12 +80,6 @@ const Sidebar = () => {
             <NavLink el={link} key={link.label} />
           ))}
         </div>
-      </div>
-      <div className="">
-        <button className="w-full flex gap-2 p-2 items-center text-lg text-gray-800">
-          <MdSettings />
-          <span>Settings</span>
-        </button>
       </div>
     </div>
   );

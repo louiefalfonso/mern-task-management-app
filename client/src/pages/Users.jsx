@@ -7,18 +7,19 @@ import { getInitials } from "../utils";
 import clsx from "clsx";
 import ConfirmatioDialog, { UserAction } from "../components/ConfirmatioDialog";
 import AddUser from "../components/AddUser";
-import { useDeleteUserMutation, useGetTeamListsQuery, useUserActionMutation } from "../redux/slices/api/userApiSlice";
 import { toast } from "sonner";
+import { useDeleteUserMutation, useGetAllUsersQuery, useUserActionMutation} from "../redux/slices/api/userApiSlice";
 
 const Users = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [open, setOpen] = useState(false);
   const [openAction, setOpenAction] = useState(false);
   const [selected, setSelected] = useState(null);
-  const { data, refetch } = useGetTeamListsQuery();
-  const [deteleUser] = useDeleteUserMutation();
   const [userAction] = useUserActionMutation();
+  const [deleteUser] = useDeleteUserMutation();
+  const { data, refetch } = useGetAllUsersQuery();
 
+  //paginate
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 10;
   const indexOfLastUser = currentPage * usersPerPage;
@@ -26,44 +27,44 @@ const Users = () => {
   const currentUsers = data?.slice(indexOfFirstUser, indexOfLastUser);
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  //delete user
+  const deleteClick = (id) => {
+    setSelected(id);
+    deleteHandler(id);
+  };
+  const deleteHandler = async (id) => {
+    try {
+      await deleteUser(id);
+      refetch();
+      toast.success("Deleted Successfully");
+      setSelected(null);
+      setTimeout(() => {
+        setOpenDialog(false);
+        window.location.reload();
+      }, 500);
+    } catch (error) {
+      console.error("Error during deletion:", error);
+      toast.error("Failed to delete user. Please try again.");
+    }
+  };
 
-
-  const userActionHandler = async() => {
+  const userActionHandler = async () => {
     try {
       const result = await userAction({
-        isActive :!selected?.isActive,
-        id : selected?._id
+        isActive: !selected?.isActive,
+        id: selected?._id,
       });
       refetch();
       toast.success("Updated Successfully");
       setSelected(null);
-      setTimeout(()=>{
+      setTimeout(() => {
         setOpenAction(false);
-      },500);
-
+      }, 500);
+      
     } catch (error) {
       console.log(error);
       toast.error(err?.data?.message || err.error);
     }
-  };
-  const deleteHandler = async() => {
-    try {
-      const result = await deteleUser(selected?._id);
-      refetch();
-      toast.success("Deleted Successfully");
-      setSelected(null);
-      setTimeout(()=>{
-        setOpenDialog(false);
-      },500);
-    } catch (error) {
-      console.log(error);
-      toast.error(err?.data?.message || err.error); 
-    }
-  };
-
-  const deleteClick = (id) => {
-    setSelected(id);
-    setOpenDialog(true);
   };
 
   const editClick = (el) => {
@@ -71,10 +72,10 @@ const Users = () => {
     setOpen(true);
   };
 
-  const userStatusClick =(el) =>{
+  const userStatusClick = (el) => {
     setSelected(el);
     setOpenAction(true);
-  }
+  };
 
   const TableHeader = () => (
     <thead className="border-b border-gray-300">
@@ -124,7 +125,6 @@ const Users = () => {
           type="button"
           onClick={() => editClick(user)}
         />
-
         <Button
           className="text-red-700 hover:text-red-500 font-semibold sm:px-0"
           label="Delete"
@@ -180,7 +180,6 @@ const Users = () => {
           </div>
         </div>
       </div>
-
       <AddUser
         open={open}
         setOpen={setOpen}
@@ -188,16 +187,16 @@ const Users = () => {
         key={new Date().getTime().toString()}
       />
 
-      <ConfirmatioDialog
-        open={openDialog}
-        setOpen={setOpenDialog}
-        onClick={deleteHandler}
-      />
-
       <UserAction
         open={openAction}
         setOpen={setOpenAction}
         onClick={userActionHandler}
+      />
+
+      <ConfirmatioDialog
+        open={openDialog}
+        setOpen={setOpenDialog}
+        onClick={deleteHandler}
       />
     </>
   );

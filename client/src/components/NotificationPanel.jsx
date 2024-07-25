@@ -5,7 +5,7 @@ import { BiSolidMessageRounded } from "react-icons/bi";
 import { HiBellAlert } from "react-icons/hi2";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { Link } from "react-router-dom";
-import { useGetNofiticationQuery, useMarkNotiAsReadMutation } from "../redux/slices/api/userApiSlice";
+//import { useGetNofiticationQuery, useMarkNotiAsReadMutation } from "../redux/slices/api/userApiSlice";
 import ViewNotification from "./ViewNotification";
 
 const data = [
@@ -38,7 +38,7 @@ const NotificationPanel = () => {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(null);
 
-  const { data, refetch } = useGetNofiticationQuery();
+  //const { data, refetch } = useGetNofiticationQuery();
   const [markAsRead] = useMarkNotiAsReadMutation();
  
   const readHandler = async(type,id) => {

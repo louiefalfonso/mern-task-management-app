@@ -31,10 +31,9 @@ const Task = () => {
   const [selected, setSelected] = useState(0);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const status = params?.status || "";
 
-   const { data, isLoading } = useGetAllTaskQuery({
+  const { data, isLoading } = useGetAllTaskQuery({
      strQuery: status,
      isTrashed: "",
      search: "",
@@ -62,7 +61,7 @@ const Task = () => {
       </div>
 
       <Tabs tabs={TABS} setSelected={setSelected}>
-        {!status && (
+        {/*!status && (
           <div className="w-full flex justify-between gap-4 md:gap-x-12 py-4">
             <TaskTitle label="To Do" className={TASK_TYPE.todo} />
             <TaskTitle
@@ -71,7 +70,7 @@ const Task = () => {
             />
             <TaskTitle label="completed" className={TASK_TYPE.completed} />
           </div>
-        )}
+        )*/}
 
         {selected !== 1 ? (
           <BoardView tasks={data?.tasks} />
@@ -80,6 +79,7 @@ const Task = () => {
             <Table tasks={data?.tasks} />
           </div>
         )}
+        
       </Tabs>
 
       <AddTask open={open} setOpen={setOpen} />

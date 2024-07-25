@@ -9,7 +9,6 @@ import Button from "./Button";
 import { useRegisterMutation } from "../redux/slices/api/authApiSlice";
 import { toast } from "sonner";
 import { useUpdateUserMutation } from "../redux/slices/api/userApiSlice";
-//import { toast } from "react-toastify";
 
 
 const AddUser = ({ open, setOpen, userData }) => {
@@ -23,8 +22,7 @@ const AddUser = ({ open, setOpen, userData }) => {
   } = useForm({ defaultValues });
 
   const dispatch = useDispatch();
-  const [addNewUser, {isLoading}] = useRegisterMutation();
- 
+  const [addNewUser, refetch] = useRegisterMutation();
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
 
   const handleOnSubmit = async (data) => {
@@ -34,6 +32,7 @@ const AddUser = ({ open, setOpen, userData }) => {
           ...data,
           password: data.email,
         }).unwrap();
+        window.location.reload();
         toast.success("User updated successfully");
         if (userData?._id === user._id) {
           dispatch(setCredentials(...result.user));
@@ -43,7 +42,7 @@ const AddUser = ({ open, setOpen, userData }) => {
           ...data,
           password: data.email,
         }).unwrap();
-         toast.success("User updated successfully");
+        toast.success("Added New User Successfully");
       }
       setTimeout(() => {
         setOpen(false);
@@ -107,13 +106,7 @@ const AddUser = ({ open, setOpen, userData }) => {
               error={errors.role ? errors.role.message : ""}
             />
           </div>
-
-          {isLoading || isUpdating ? (
-            <div className="py-5">
-              <Loading />
-            </div>
-          ) : (
-            <div className="py-3 mt-4 sm:flex sm:flex-row-reverse">
+          <div className="py-3 mt-4 sm:flex sm:flex-row-reverse">
               <Button
                 type="submit"
                 className="bg-blue-600 px-8 text-sm font-semibold text-white hover:bg-blue-700  sm:w-auto"
@@ -127,7 +120,7 @@ const AddUser = ({ open, setOpen, userData }) => {
                 label="Cancel"
               />
             </div>
-          )}
+
         </form>
       </ModalWrapper>
     </>

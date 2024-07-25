@@ -8,44 +8,47 @@ import TaskTable from "../components/TaskTable";
 import UserTable from "../components/UserTable";
 import Card from "../components/Card";
 import Chart from "../components/Chart";
+import { useGetAllTaskQuery } from "../redux/slices/api/taskApiSlice";
 
 import { useGetDashboardStatsQuery } from "../redux/slices/api/taskApiSlice";
 
 const Dashboard = () => {
- 
-  const {data, isLoading} = useGetDashboardStatsQuery();
-  const totals = data?.tasks;
+
   
-  const stats = [
-    {
-      _id: "1",
-      label: "TOTAL TASK",
-      total: data?.totalTasks || 0,
-      icon: <FaNewspaper />,
-      bg: "bg-[#1d4ed8]",
-    },
-    {
-      _id: "2",
-      label: "COMPLETED TASK",
-      total: totals?.completed || 0,
-      icon: <MdAdminPanelSettings />,
-      bg: "bg-[#0f766e]",
-    },
-    {
-      _id: "3",
-      label: "TASK IN PROGRESS ",
-      total: totals?.["in progress"] || 0,
-      icon: <LuClipboardEdit />,
-      bg: "bg-[#f59e0b]",
-    },
-    {
-      _id: "4",
-      label: "TODOS",
-      total: totals?.["todo"],
-      icon: <FaArrowsToDot />,
-      bg: "bg-[#be185d]" || 0,
-    },
-  ];
+ const { data, isLoading } = useGetDashboardStatsQuery();
+ const totals = data?.tasks;
+
+ const stats = [
+   {
+     _id: "1",
+     label: "TOTAL TASK",
+     total: data?.totalTasks || 0,
+     icon: <FaNewspaper />,
+     bg: "bg-[#1d4ed8]",
+   },
+   {
+     _id: "2",
+     label: "COMPLETED TASK",
+     total: totals?.completed || 0,
+     icon: <MdAdminPanelSettings />,
+     bg: "bg-[#0f766e]",
+   },
+   {
+     _id: "3",
+     label: "TASK IN PROGRESS ",
+     total: totals?.["in progress"] || 0,
+     icon: <LuClipboardEdit />,
+     bg: "bg-[#f59e0b]",
+   },
+   {
+     _id: "4",
+     label: "TODOS",
+     total: totals?.["todo"],
+     icon: <FaArrowsToDot />,
+     bg: "bg-[#be185d]" || 0,
+   },
+ ];
+
 
   return (
     <div className="h-full py-4">
@@ -54,8 +57,8 @@ const Dashboard = () => {
           <Card key={index} icon={icon} bg={bg} label={label} count={total} />
         ))}
       </div>
-      <div className='w-full bg-white my-16 p-4 rounded shadow-sm'>
-        <h4 className='text-xl text-gray-600 font-semibold'>
+      <div className="w-full bg-white my-16 p-4 rounded shadow-sm">
+        <h4 className="text-xl text-gray-600 font-semibold">
           Chart by Priority
         </h4>
         <Chart data={data?.graphData}/>
@@ -64,7 +67,7 @@ const Dashboard = () => {
         <TaskTable tasks={data?.last10Task} />
       </div>
       <div className="w-full flex flex-col md:flex-row gap-4 2xl:gap-10">
-        {<UserTable users={data?.users} />}
+        <UserTable users={data?.users} />
       </div>
     </div>
   );

@@ -231,7 +231,7 @@ const TaskDetails = () => {
 const Activities = ({ activity, id }) => {
   const [selected, setSelected] = useState(act_types[0]);
   const [text, setText] = useState("");
-  const isLoading = false;
+  //const isLoading = false;
 
   const handleSubmit = async () => {};
 
@@ -298,16 +298,13 @@ const Activities = ({ activity, id }) => {
             placeholder="Type ......"
             className="bg-white w-full mt-10 border border-gray-300 outline-none p-4 rounded-md focus:ring-2 ring-blue-500"
           ></textarea>
-          {isLoading ? (
-            <Loading />
-          ) : (
-            <Button
+          <Button
               type="button"
               label="Submit"
               onClick={handleSubmit}
               className="bg-blue-600 text-white rounded"
             />
-          )}
+          
         </div>
       </div>
     </div>

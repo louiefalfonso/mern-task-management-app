@@ -8,18 +8,57 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import { Menu, Transition, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import AddTask from "./AddTask";
 
+import { toast } from "sonner";
+
 import ConfirmatioDialog from "../ConfirmatioDialog";
+import { useDuplicateTaskMutation, useTrashTaskMutation } from "../../redux/slices/api/taskApiSlice";
+import AddSubTask from "./AddSubTask";
+
 
 const TaskDialog = ({ task }) => {
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
 
+  const [deleteTask] = useTrashTaskMutation();
+  const [duplicateTask] = useDuplicateTaskMutation();
+
   const navigate = useNavigate();
 
-  const duplicateHandler = () => {};
-  const deleteClicks = () => {};
-  const deleteHandler = () => {};
+  const duplicateHandler = async () => {
+    try {
+      const result = await duplicateTask(task._id).unwrap();
+      toast.success(result.message);
+      setTimeout(() => {
+        setOpenDialog(false);
+        window.location.reload();
+      }, 500);
+
+    } catch (error) {
+      console.log(error);
+      toast.error(error?.data?.message || error.error);
+    }
+  };
+  const deleteClicks = () => {
+    setOpenDialog(true);
+    
+  };
+  const deleteHandler = async () => {
+    try {
+      const result = await deleteTask({
+        id: task._id,
+        isTrashed: "trash"
+      }).unwrap()
+      toast.success(result?.message);
+      setTimeout(()=>{
+        setOpenDialog(false);
+        window.location.reload();
+      },500);
+    } catch (error) {
+      console.log(error);
+      toast.error(error?.data?.message || error.error);
+    }
+  };
 
   const items = [
     {
@@ -33,14 +72,9 @@ const TaskDialog = ({ task }) => {
       onClick: () => setOpenEdit(true),
     },
     {
-      label: "Add Sub-Task",
-      icon: <MdAdd className="mr-2 h-5 w-5" aria-hidden="true" />,
-      onClick: () => setOpen(true),
-    },
-    {
       label: "Duplicate",
       icon: <HiDuplicate className="mr-2 h-5 w-5" aria-hidden="true" />,
-      onClick: () => duplicateHanlder(),
+      onClick: () => duplicateHandler(),
     },
   ];
 
@@ -65,7 +99,7 @@ const TaskDialog = ({ task }) => {
               <div className="px-1 py-1 space-y-2">
                 {items.map((el) => (
                   <MenuItem key={el.label}>
-                    {({ }) => (
+                    {({active}) => (
                       <button
                         onClick={el?.onClick}
                         className={`${
@@ -82,7 +116,7 @@ const TaskDialog = ({ task }) => {
 
               <div className="px-1 py-1">
                 <MenuItem>
-                  {({  }) => (
+                  {({active}) => (
                     <button
                       onClick={() => deleteClicks()}
                       className={`${
@@ -110,8 +144,8 @@ const TaskDialog = ({ task }) => {
         key={new Date().getTime()}
       />
 
-      {/*<AddSubTask open={open} setOpen={setOpen} />*/}
-
+      <AddSubTask open={open} setOpen={setOpen} />
+      
       <ConfirmatioDialog
         open={openDialog}
         setOpen={setOpenDialog}

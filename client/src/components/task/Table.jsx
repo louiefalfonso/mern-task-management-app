@@ -13,7 +13,9 @@ import { FaList } from "react-icons/fa";
 import UserInfo from "../UserInfo";
 import Button from "../Button";
 import ConfirmatioDialog from "../ConfirmatioDialog";
-import { useGetAllTaskQuery } from "../../redux/slices/api/taskApiSlice";
+import { useGetAllTaskQuery, useUpdateTaskMutation } from "../../redux/slices/api/taskApiSlice";
+import { useTrashTaskMutation } from "../../redux/slices/api/taskApiSlice";
+import AddTask from "./AddTask";
 
 const ICONS = {
   high: <MdKeyboardDoubleArrowUp />,
@@ -24,13 +26,35 @@ const ICONS = {
 const Table = ({ tasks }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [selected, setSelected] = useState(null);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [deleteTask, refetch] = useTrashTaskMutation();
+  const [editTask] = useUpdateTaskMutation();
 
   const deleteClicks = (id) => {
     setSelected(id);
+    //setOpenDialog(true);
+    deleteHandler(id);
+  };
+  const editClicks = (id) =>{
+    setSelected(id);
     setOpenDialog(true);
   };
+  const editHandler = async() => {};
 
-  const deleteHandler = () => {};
+
+  const deleteHandler = async(id) => {
+    try {
+      const result = await deleteTask(id);
+      toast.success("Task Deleted Successfully");
+      setSelected(null);
+      setTimeout(()=>{
+        window.location.reload();
+      },500);
+    } catch (error) {
+      console.error("Error during deletion:", error);
+      toast.error("Failed to delete the task. Please try again.");
+    }
+  };
 
   const TableHeader = () => (
     <thead className="w-full border-b border-gray-300">
@@ -75,23 +99,6 @@ const Table = ({ tasks }) => {
       </td>
 
       <td className="py-2">
-        <div className="flex items-center gap-3">
-          <div className="flex gap-1 items-center text-sm text-gray-600">
-            <BiMessageAltDetail />
-            <span>{task?.activities?.length}</span>
-          </div>
-          <div className="flex gap-1 items-center text-sm text-gray-600 dark:text-gray-400">
-            <MdAttachFile />
-            <span>{task?.assets?.length}</span>
-          </div>
-          <div className="flex gap-1 items-center text-sm text-gray-600 dark:text-gray-400">
-            <FaList />
-            <span>0/{task?.subTasks?.length}</span>
-          </div>
-        </div>
-      </td>
-
-      <td className="py-2">
         <div className="flex">
           {task?.team?.map((m, index) => (
             <div
@@ -112,6 +119,7 @@ const Table = ({ tasks }) => {
           className="text-blue-600 hover:text-blue-500 sm:px-0 text-sm md:text-base"
           label="Edit"
           type="button"
+          onClick={() => setOpenEdit(true)}
         />
 
         <Button
@@ -138,11 +146,18 @@ const Table = ({ tasks }) => {
         </div>
       </div>
 
-      {/* TODO */}
-      <ConfirmatioDialog
-        open={openDialog}
-        setOpen={setOpenDialog}
-        onClick={deleteHandler}
+      {/* TODO 
+        <ConfirmatioDialog
+          open={openDialog}
+          setOpen={setOpenDialog}
+          onClick={deleteHandler}
+        />*/}
+
+      <AddTask
+        open={openEdit}
+        setOpen={setOpenEdit}
+        task={tasks}
+        key={new Date().getTime()}
       />
     </>
   );

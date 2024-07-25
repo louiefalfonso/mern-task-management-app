@@ -4,17 +4,9 @@ const USER_URL = "/user";
 
 export const userApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    updateUser: builder.mutation({
+    getAllUsers: builder.query({
       query: (data) => ({
-        url: `${USER_URL}/profile`,
-        method: "PUT",
-        body: data,
-        credentials: "include",
-      }),
-    }),
-    getTeamLists: builder.query({
-      query: (data) => ({
-        url: `${USER_URL}/get-team`,
+        url: `${USER_URL}/users`,
         method: "GET",
         body: data,
         credentials: "include",
@@ -22,8 +14,15 @@ export const userApiSlice = apiSlice.injectEndpoints({
     }),
     deleteUser: builder.mutation({
       query: (id) => ({
-        url: `${USER_URL}/${id}`,
+        url: `${USER_URL}/delete/${id}`,
         method: "DELETE",
+        credentials: "include",
+      }),
+    }),
+    updateUser: builder.mutation({
+      query: (data) => ({
+        url: `${USER_URL}/profile`,
+        method: "PUT",
         body: data,
         credentials: "include",
       }),
@@ -36,31 +35,9 @@ export const userApiSlice = apiSlice.injectEndpoints({
         credentials: "include",
       }),
     }),
-    getNofitication: builder.query({
-      query: () => ({
-        url: `${USER_URL}/notifications`,
-        method: "GET",
-        credentials: "include",
-      }),
-    }),
-    markNotiAsRead: builder.mutation({
-      query: (data) => ({
-        url: `${USERS_URL}/read-noti?isReadType=${data.type}&id=${data.id}`,
-        method: "PUT",
-        body: data,
-        credentials: "include",
-      }),
-    }),
-    
   }),
 });
 
-export const { 
-  useUpdateUserMutation, 
-  useGetTeamListsQuery, 
-  useDeleteUserMutation, 
-  useUserActionMutation, 
-  useGetNofiticationQuery,
-  useMarkNotiAsReadMutation,
+export const { useGetAllUsersQuery, useDeleteUserMutation, useUpdateUserMutation, useUserActionMutation
 } = userApiSlice;
 

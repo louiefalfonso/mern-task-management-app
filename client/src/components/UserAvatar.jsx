@@ -22,14 +22,18 @@ const UserAvatar = () => {
   const logoutHandler = async () => {
     try {
       await logoutUser().unwrap();
-      localStorage.removeItem("userInfo"); 
+      localStorage.removeItem("userInfo");
+      document.cookie ="token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       dispatch(logout());
       navigate("/login");
+      toast.success("Logged out successfully");
     } catch (err) {
       console.error("Error during logout:", err);
       toast.error(err?.data?.message || err.error);
     }
   };
+
+  
 
   return (
     <>

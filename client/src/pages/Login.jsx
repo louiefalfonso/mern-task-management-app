@@ -24,7 +24,6 @@ const Login = () => {
   const submitHandler = async (data) => {
     try{
       const result = await login(data).unwrap();
-      //console.log(result)
       dispatch(setCredentials(result))
       navigate("/");
     }
@@ -33,7 +32,6 @@ const Login = () => {
       toast.error(err?.data?.message || err.error);
       
     }
-    //console.log("submit");
   };
 
   useEffect(() => {

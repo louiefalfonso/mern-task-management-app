@@ -30,7 +30,11 @@ const Tasks = () => {
   const [open, setOpen] = useState(false);
   const status = params?.status || "";
 
-
+  const { data, isLoading } = useGetAllTaskQuery({
+    strQuery: status,
+    isTrashed: "",
+    search: "",
+  });
 
   return (
     <div className="w-full">
@@ -59,10 +63,10 @@ const Tasks = () => {
         )}
 
         {selected !== 1 ? (
-          <BoardView tasks={tasks} />
+          <BoardView tasks={data?.tasks} />
         ) : (
           <div className="w-full">
-            <Table tasks={tasks} />
+            <Table tasks={data?.tasks} />
           </div>
         )}
       </Tabs>

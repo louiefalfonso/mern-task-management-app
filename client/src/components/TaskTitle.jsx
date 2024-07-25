@@ -9,10 +9,11 @@ const TaskTitle = ({ label, className }) => {
         <div className={clsx("w-4 h-4 rounded-full ", className)} />
         <p className="text-sm md:text-base text-gray-600">{label}</p>
       </div>
-
+     
       <button className="hidden md:block">
         <IoMdAdd className="text-lg text-black" />
       </button>
+     
     </div>
   );
 };
