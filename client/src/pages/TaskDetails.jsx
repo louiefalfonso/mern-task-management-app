@@ -21,17 +21,11 @@ import Loading from "../components/Loader";
 import Button from "../components/Button";
 import { useGetSingleTaskQuery, usePostTaskActivityMutation } from "../redux/slices/api/taskApiSlice";
 
-const assets = [
-  "https://images.pexels.com/photos/2418664/pexels-photo-2418664.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-  "https://images.pexels.com/photos/8797307/pexels-photo-8797307.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-  "https://images.pexels.com/photos/2534523/pexels-photo-2534523.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-  "https://images.pexels.com/photos/804049/pexels-photo-804049.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-];
 
 const ICONS = {
   high: <MdKeyboardDoubleArrowUp />,
   medium: <MdKeyboardArrowUp />,
-  low: <MdKeyboardArrowDown />,
+  normal: <MdKeyboardArrowDown />,
 };
 
 const bgColor = {
@@ -42,7 +36,7 @@ const bgColor = {
 
 const TABS = [
   { title: "Task Detail", icon: <FaTasks /> },
-  { title: "Activities/Timeline", icon: <RxActivityLog /> },
+  /*{ title: "Activities/Timeline", icon: <RxActivityLog /> },*/
 ];
 
 const TASKTYPEICON = {
@@ -89,11 +83,13 @@ const act_types = [
 
 const TaskDetails = () => {
   const { id } = useParams();
-  const [selected, setSelected] = useState(0);
   const {data, isLoading, refetch} = useGetSingleTaskQuery(id);
+  const [selected, setSelected] = useState(0);
   const task = data?.task;
 
-  if (!task) {
+  //const task = tasks[3];
+
+  if (!id) {
     return <div>No data available</div>;
   }
 
@@ -119,34 +115,24 @@ const TaskDetails = () => {
                     <span className="uppercase">{task?.priority} Priority</span>
                   </div>
 
-                  <div className={clsx("flex items-center gap-2")}>
-                    <div
-                      className={clsx(
-                        "w-4 h-4 rounded-full",
-                        TASK_TYPE[task.stage]
-                      )}
-                    />
-                    <span className="text-black uppercase">{task?.stage}</span>
-                  </div>
+                  {task && (
+                    <div className={clsx("flex items-center gap-2")}>
+                      <div
+                        className={clsx(
+                          "w-4 h-4 rounded-full",
+                          TASK_TYPE[task.stage]
+                        )}
+                      />
+                      <span className="text-black uppercase">{task.stage}</span>
+                    </div>
+                  )}
                 </div>
 
                 <p className="text-gray-500">
                   Created At: {new Date(task?.date).toDateString()}
                 </p>
 
-                <div className="flex items-center gap-8 p-4 border-y border-gray-200">
-                  <div className="space-x-2">
-                    <span className="font-semibold">Assets :</span>
-                    <span>{task?.assets?.length}</span>
-                  </div>
-
-                  <span className="text-gray-400">|</span>
-
-                  <div className="space-x-2">
-                    <span className="font-semibold">Sub-Task :</span>
-                    <span>{task?.subTasks?.length}</span>
-                  </div>
-                </div>
+               
 
                 <div className="space-y-4 py-6">
                   <p className="text-gray-600 font-semibold test-sm">
@@ -176,35 +162,6 @@ const TaskDetails = () => {
                     ))}
                   </div>
                 </div>
-
-                <div className="space-y-4 py-6">
-                  <p className="text-gray-500 font-semibold text-sm">
-                    SUB-TASKS
-                  </p>
-                  <div className="space-y-8">
-                    {task?.subTasks?.map((el, index) => (
-                      <div key={index} className="flex gap-3">
-                        <div className="w-10 h-10 flex items-center justify-center rounded-full bg-violet-50-200">
-                          <MdTaskAlt className="text-violet-600" size={26} />
-                        </div>
-
-                        <div className="space-y-1">
-                          <div className="flex gap-2 items-center">
-                            <span className="text-sm text-gray-500">
-                              {new Date(el?.date).toDateString()}
-                            </span>
-
-                            <span className="px-2 py-0.5 text-center text-sm rounded-full bg-violet-100 text-violet-700 font-semibold">
-                              {el?.tag}
-                            </span>
-                          </div>
-
-                          <p className="text-gray-700">{el?.title}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
               </div>
               {/* RIGHT */}
               <div className="w-full md:w-1/2 space-y-8">
@@ -225,7 +182,7 @@ const TaskDetails = () => {
           </>
         ) : (
           <>
-            <Activities activity={data?.activities} id={id} refetch={refetch}/>
+            {/*<Activities activity={task?.activities} id={id} refetch={refetch} />*/}
           </>
         )}
       </Tabs>
@@ -233,35 +190,39 @@ const TaskDetails = () => {
   );
 };
 
-const Activities = ({ activity, id, refetch }) => {
+const Activities = ({ activity, id, refetch, task }) => {
   const [selected, setSelected] = useState(act_types[0]);
   const [text, setText] = useState("");
-  const [postActivity, isLoading] = usePostTaskActivityMutation();
-  const data = useGetSingleTaskQuery(id);
-  const task = data?.task;
+  const [postTaskActivity] = usePostTaskActivityMutation(id);
+  //const {data} = useGetSingleTaskQuery(id);
+  //const task = data?.task;
 
-  const handleSubmit = async (id) => {
+
+  const handleSubmit = async () => {
     try {
       const activityData = {
         type: selected?.toLowerCase(),
         activity: text,
       };
-      const result = await postActivity({
+  
+      const result = await postTaskActivity({
         data: activityData, id
       }).unwrap();
+      await refetch();
+
+      setSelected(act_types[0]);
       setText("");
       toast.success(result?.message);
       refetch();
-      
     } catch (error) {
       console.log(error);
       toast.error(error?.data?.message || error.error);
     }
   };
+  
 
+ 
   const Card = ({ item }) => {
-    const { type, by, date, activity } = item;
-
     return (
       <div className="flex space-x-4">
         <div className="flex flex-col items-center flex-shrink-0">
@@ -272,13 +233,14 @@ const Activities = ({ activity, id, refetch }) => {
             <div className="w-0.5 bg-gray-300 h-full"></div>
           </div>
         </div>
+
         <div className="flex flex-col gap-y-1 mb-8">
-          <p className="font-semibold">{by?.name}</p>
+          <p className="font-semibold">{item?.by?.name}</p>
           <div className="text-gray-500 space-y-2">
-            <span className="capitalize">{type}</span>
-            <span className="text-sm">{moment(date).fromNow()}</span>
+            <span className="capitalize">{item?.type}</span>
+            <span className="text-sm"> {moment(item?.date).fromNow()}</span>
           </div>
-          <div className="text-gray-700">{activity}</div>
+          <div className="text-gray-700">{item?.activity}</div>
         </div>
       </div>
     );
@@ -295,7 +257,7 @@ const Activities = ({ activity, id, refetch }) => {
             <Card
               key={index}
               item={el}
-              isConnected={index < activity.length - 1}
+              isConnected={index < activity?.length - 1}
             />
           ))}
         </div>
@@ -318,18 +280,18 @@ const Activities = ({ activity, id, refetch }) => {
             </div>
           ))}
           <textarea
-            rows={10}
+            rows={5}
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Type ......"
+            placeholder="Type Addition Details Here"
             className="bg-white w-full mt-10 border border-gray-300 outline-none p-4 rounded-md focus:ring-2 ring-blue-500"
           ></textarea>
           <Button
-            type="button"
-            label="Submit"
-            onClick={handleSubmit}
-            className="bg-blue-600 text-white rounded"
-          />
+              type="button"
+              label="Submit"
+              onClick={handleSubmit}
+              className="bg-blue-600 text-white rounded"
+            />
         </div>
       </div>
     </div>

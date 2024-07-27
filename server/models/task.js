@@ -14,7 +14,8 @@ const taskSchema = new Schema(
       default: "todo",
       enum: ["todo", "in progress", "completed"],
     },
-    activities: [{
+    activities: [
+      {
         type: {
           type: String,
           default: "assigned",
@@ -30,15 +31,14 @@ const taskSchema = new Schema(
         activity: String,
         date: { type: Date, default: new Date() },
         by: { type: Schema.Types.ObjectId, ref: "User" },
-      }],
-
+      },
+    ],
     assets: [String],
     team: [{ type: Schema.Types.ObjectId, ref: "User" }],
     isTrashed: { type: Boolean, default: false },
   },
   { timestamps: true }
 );
-
 const Task = mongoose.model("Task", taskSchema);
 
 export default Task;
