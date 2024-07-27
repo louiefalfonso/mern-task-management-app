@@ -38,7 +38,12 @@ const linkData = [
     link: "todo/todo",
     icon: <MdOutlinePendingActions />,
   },
-];
+  {
+    label: "Trash",
+    link: "trashed",
+    icon: <FaTrashAlt />,
+  },
+]
 
 const Sidebar = () => {
   const { user } = useSelector((state) => state.auth);

@@ -23,3 +23,4 @@ export const createJWT = (res, userId) => {
     maxAge: 1 * 24 * 60 * 60 * 1000,
   });
 };
+

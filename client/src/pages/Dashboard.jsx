@@ -8,8 +8,6 @@ import TaskTable from "../components/TaskTable";
 import UserTable from "../components/UserTable";
 import Card from "../components/Card";
 import Chart from "../components/Chart";
-import { useGetAllTaskQuery } from "../redux/slices/api/taskApiSlice";
-
 import { useGetDashboardStatsQuery } from "../redux/slices/api/taskApiSlice";
 
 const Dashboard = () => {

@@ -68,9 +68,9 @@ const AddTask = ({ open, setOpen, task }) => {
        assets: [...URLS, ...uploadedFileURLs],
      };
      const result = task?.id
-       ? await updateTask({ id: task?.id, data: newData }).unwrap()
+       ? await updateTask({ ...newData, _id: task?._id}).unwrap()
        : await createTask(newData).unwrap();
-     toast.success("Added New Task Successfully");
+       toast.success("Added New Task Successfully");
      setTimeout(() => {
        setOpen(false);
      }, 500);
@@ -185,7 +185,7 @@ const AddTask = ({ open, setOpen, task }) => {
             </div>
           </div>
 
-          <div className="bg-gray-50 py-6 sm:flex sm:flex-row-reverse gap-4">
+          <div className="py-6 sm:flex sm:flex-row-reverse gap-4">
             {uploading ? (
               <span className="text-sm py-2 text-red-500">
                 Uploading assets

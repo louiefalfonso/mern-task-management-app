@@ -13,7 +13,8 @@ import Button from "../components/Button";
 import { PRIOTITYSTYELS, TASK_TYPE } from "../utils";
 import AddUser from "../components/AddUser";
 import ConfirmatioDialog from "../components/ConfirmatioDialog";
-//import { useGetAllTaskQuery } from "../redux/slices/api/taskApiSlice";
+import { useDeleteRestoreTaskMutation, useGetAllTaskQuery } from "../redux/slices/api/taskApiSlice";
+import { toast } from "sonner";
 
 const ICONS = {
   high: <MdKeyboardDoubleArrowUp />,
@@ -28,15 +29,54 @@ const Trash = () => {
   const [type, setType] = useState("delete");
   const [selected, setSelected] = useState("");
 
-  /*  
-  const { data, isLoading } = useGetAllTaskQuery({
-      isTrashed: true,
-      search: "",
-    });*/
 
+  const { data, isLoading, refetch } = useGetAllTaskQuery({
+    strQuery: "",
+    isTrashed: "true",
+    search: "",
+  });
+  const [deleteRestoreTask] = useDeleteRestoreTaskMutation();
 
-
-
+  const deleteRestoreHandler = async () => {
+    try {
+      let result;
+      switch (type) {
+        case "delete":
+          result = await deleteRestoreTask({
+            id: selected,
+            actionType: "delete",
+          }).unwrap();
+          break;
+        case "deleteAll":
+          result = await deleteRestoreTask({
+            id: selected,
+            actionType: "deleteAll",
+          }).unwrap();
+          break;
+        case "restore":
+          result = await deleteRestoreTask({
+            id: selected,
+            actionType: "restore",
+          }).unwrap();
+          break;
+        case "restoreAll":
+          result = await deleteRestoreTask({
+            id: selected,
+            actionType: "restoreAll",
+          }).unwrap();
+          break;
+      }
+      toast.success(result?.message);
+      setTimeout(() => {
+        setOpenDialog(false);
+        refetch();
+        window.location.reload();
+      }, 500);
+    } catch (err) {
+      console.log(err);
+      toast.error(err?.data?.message || err.error);
+    }
+  };
   
   const deleteAllClick = () => {
     setType("deleteAll");
@@ -140,7 +180,7 @@ const Trash = () => {
             <table className="w-full mb-5">
               <TableHeader />
               <tbody>
-                {tasks?.map((tk, id) => (
+                {data?.tasks?.map((tk, id) => (
                   <TableRow key={id} item={tk} />
                 ))}
               </tbody>

@@ -40,7 +40,6 @@ const Tasks = () => {
     <div className="w-full">
       <div className="flex items-center justify-between mb-4">
         <Title title={status ? `${status} Tasks` : "Tasks"} />
-
         {!status && (
           <Button
             onClick={() => setOpen(true)}

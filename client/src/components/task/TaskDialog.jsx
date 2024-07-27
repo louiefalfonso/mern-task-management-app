@@ -12,7 +12,7 @@ import { toast } from "sonner";
 
 import ConfirmatioDialog from "../ConfirmatioDialog";
 import { useDuplicateTaskMutation, useTrashTaskMutation } from "../../redux/slices/api/taskApiSlice";
-import AddSubTask from "./AddSubTask";
+
 
 
 const TaskDialog = ({ task }) => {
@@ -49,7 +49,7 @@ const TaskDialog = ({ task }) => {
         id: task._id,
         isTrashed: "trash"
       }).unwrap()
-      toast.success(result?.message);
+      toast.success("Deleted Successfully");
       setTimeout(()=>{
         setOpenDialog(false);
         window.location.reload();
@@ -144,7 +144,7 @@ const TaskDialog = ({ task }) => {
         key={new Date().getTime()}
       />
 
-      <AddSubTask open={open} setOpen={setOpen} />
+    
       
       <ConfirmatioDialog
         open={openDialog}

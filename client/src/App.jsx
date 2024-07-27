@@ -101,12 +101,11 @@ function App() {
           <Route path="/users" element={<Users />} />
           <Route path="/tasks" element={<Tasks />} />
 
-          
-
           <Route path="/completed/:status" element={<Tasks />} />
           <Route path="/in-progress/:status" element={<Tasks />} />
           <Route path="/todo/:status" element={<Tasks />} />
           <Route path="/task/:id" element={<TaskDetails />} />
+          <Route path="/trashed" element={<Trash />} />
         </Route>
         <Route path="/login" element={<Login />} />
       </Routes>

@@ -13,7 +13,6 @@ import { FaList } from "react-icons/fa";
 import UserInfo from "./UserInfo";
 import { IoMdAdd } from "react-icons/io";
 import TaskDialog from "./task/TaskDialog";
-import AddSubTask from "./task/AddSubTask";
 
 const ICONS = {
   high: <MdKeyboardDoubleArrowUp />,
@@ -82,8 +81,6 @@ const TaskCard = ({ task }) => {
           </div>
         </div>
       </div>
-
-      <AddSubTask open={open} setOpen={setOpen} id={task._id} />
     </>
   );
 };

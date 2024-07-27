@@ -20,39 +20,45 @@ import AddTask from "./AddTask";
 const ICONS = {
   high: <MdKeyboardDoubleArrowUp />,
   medium: <MdKeyboardArrowUp />,
-  low: <MdKeyboardArrowDown />,
+  normal: <MdKeyboardArrowDown />,
 };
 
 const Table = ({ tasks }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [selected, setSelected] = useState(null);
   const [openEdit, setOpenEdit] = useState(false);
-  const [deleteTask, refetch] = useTrashTaskMutation();
+  const [trashTask, refetch] = useTrashTaskMutation();
   const [editTask] = useUpdateTaskMutation();
 
   const deleteClicks = (id) => {
     setSelected(id);
-    //setOpenDialog(true);
-    deleteHandler(id);
+    setOpenDialog(true);
   };
   const editClicks = (id) =>{
     setSelected(id);
     setOpenDialog(true);
   };
-  const editHandler = async() => {};
+  const editTaskHandler = async(el) => {
+    setSelected(el);
+    setOpenEdit(true);
+
+  };
 
 
   const deleteHandler = async(id) => {
     try {
-      const result = await deleteTask(id);
-      toast.success("Task Deleted Successfully");
-      setSelected(null);
+      const result = await trashTask({
+        id: selected,
+        isTrash: "trash",
+      }).unwrap()
+      toast.success(result?.message);
       setTimeout(()=>{
+        setOpenDialog(false);
         window.location.reload();
       },500);
     } catch (error) {
-      console.error("Error during deletion:", error);
-      toast.error("Failed to delete the task. Please try again.");
+      console.error(err);
+      toast.error(err?.data?.message || err.error);
     }
   };
 
@@ -62,7 +68,6 @@ const Table = ({ tasks }) => {
         <th className="py-2">Task Title</th>
         <th className="py-2">Priority</th>
         <th className="py-2 line-clamp-1">Created At</th>
-        <th className="py-2">Assets</th>
         <th className="py-2">Team</th>
       </tr>
     </thead>
@@ -119,7 +124,7 @@ const Table = ({ tasks }) => {
           className="text-blue-600 hover:text-blue-500 sm:px-0 text-sm md:text-base"
           label="Edit"
           type="button"
-          onClick={() => setOpenEdit(true)}
+          onClick={() => editTaskHandler(task)}
         />
 
         <Button
@@ -146,17 +151,18 @@ const Table = ({ tasks }) => {
         </div>
       </div>
 
-      {/* TODO 
-        <ConfirmatioDialog
-          open={openDialog}
-          setOpen={setOpenDialog}
-          onClick={deleteHandler}
-        />*/}
+      {/* TODO
+       */}
+      <ConfirmatioDialog
+        open={openDialog}
+        setOpen={setOpenDialog}
+        onClick={deleteHandler}
+      />
 
       <AddTask
         open={openEdit}
         setOpen={setOpenEdit}
-        task={tasks}
+        task={selected}
         key={new Date().getTime()}
       />
     </>

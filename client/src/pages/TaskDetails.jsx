@@ -14,11 +14,12 @@ import {
 import { RxActivityLog } from "react-icons/rx";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
-import { tasks } from "../assets/data";
+import { activitiesData, tasks } from "../assets/data";
 import Tabs from "../components/Tabs";
 import { PRIOTITYSTYELS, TASK_TYPE, getInitials } from "../utils";
 import Loading from "../components/Loader";
 import Button from "../components/Button";
+import { useGetSingleTaskQuery, usePostTaskActivityMutation } from "../redux/slices/api/taskApiSlice";
 
 const assets = [
   "https://images.pexels.com/photos/2418664/pexels-photo-2418664.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
@@ -70,7 +71,7 @@ const TASKTYPEICON = {
       <MdOutlineDoneAll size={24} />
     </div>
   ),
-  "in progress": (
+  inprogress: (
     <div className="w-8 h-8 flex items-center justify-center rounded-full bg-violet-600 text-white">
       <GrInProgress size={16} />
     </div>
@@ -88,9 +89,13 @@ const act_types = [
 
 const TaskDetails = () => {
   const { id } = useParams();
-
   const [selected, setSelected] = useState(0);
-  const task = tasks[3];
+  const {data, isLoading, refetch} = useGetSingleTaskQuery(id);
+  const task = data?.task;
+
+  if (!task) {
+    return <div>No data available</div>;
+  }
 
   return (
     <div className="w-full flex flex-col gap-3 mb-4 overflow-y-hidden">
@@ -220,7 +225,7 @@ const TaskDetails = () => {
           </>
         ) : (
           <>
-            <Activities activity={task?.activities} id={id} />
+            <Activities activity={data?.activities} id={id} refetch={refetch}/>
           </>
         )}
       </Tabs>
@@ -228,14 +233,35 @@ const TaskDetails = () => {
   );
 };
 
-const Activities = ({ activity, id }) => {
+const Activities = ({ activity, id, refetch }) => {
   const [selected, setSelected] = useState(act_types[0]);
   const [text, setText] = useState("");
-  //const isLoading = false;
+  const [postActivity, isLoading] = usePostTaskActivityMutation();
+  const data = useGetSingleTaskQuery(id);
+  const task = data?.task;
 
-  const handleSubmit = async () => {};
+  const handleSubmit = async (id) => {
+    try {
+      const activityData = {
+        type: selected?.toLowerCase(),
+        activity: text,
+      };
+      const result = await postActivity({
+        data: activityData, id
+      }).unwrap();
+      setText("");
+      toast.success(result?.message);
+      refetch();
+      
+    } catch (error) {
+      console.log(error);
+      toast.error(error?.data?.message || error.error);
+    }
+  };
 
   const Card = ({ item }) => {
+    const { type, by, date, activity } = item;
+
     return (
       <div className="flex space-x-4">
         <div className="flex flex-col items-center flex-shrink-0">
@@ -246,18 +272,18 @@ const Activities = ({ activity, id }) => {
             <div className="w-0.5 bg-gray-300 h-full"></div>
           </div>
         </div>
-
         <div className="flex flex-col gap-y-1 mb-8">
-          <p className="font-semibold">{item?.by?.name}</p>
+          <p className="font-semibold">{by?.name}</p>
           <div className="text-gray-500 space-y-2">
-            <span className="capitalize">{item?.type}</span>
-            <span className="text-sm">{moment(item?.date).fromNow()}</span>
+            <span className="capitalize">{type}</span>
+            <span className="text-sm">{moment(date).fromNow()}</span>
           </div>
-          <div className="text-gray-700">{item?.activity}</div>
+          <div className="text-gray-700">{activity}</div>
         </div>
       </div>
     );
   };
+  
 
   return (
     <div className="w-full flex gap-10 2xl:gap-20 min-h-screen px-10 py-8 bg-white shadow rounded-md justify-between overflow-y-auto">
@@ -299,12 +325,11 @@ const Activities = ({ activity, id }) => {
             className="bg-white w-full mt-10 border border-gray-300 outline-none p-4 rounded-md focus:ring-2 ring-blue-500"
           ></textarea>
           <Button
-              type="button"
-              label="Submit"
-              onClick={handleSubmit}
-              className="bg-blue-600 text-white rounded"
-            />
-          
+            type="button"
+            label="Submit"
+            onClick={handleSubmit}
+            className="bg-blue-600 text-white rounded"
+          />
         </div>
       </div>
     </div>
